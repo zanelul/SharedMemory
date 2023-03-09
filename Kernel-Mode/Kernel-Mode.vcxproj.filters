@@ -30,15 +30,18 @@
     <ClCompile Include="src\Communication\Communication.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Memory\Memory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dependencies\defines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dependencies\registry.h">
+    <ClInclude Include="src\Communication\Communication.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Communication\Communication.h">
+    <ClInclude Include="src\Memory\Memory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

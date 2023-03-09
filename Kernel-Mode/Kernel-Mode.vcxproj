@@ -179,13 +179,14 @@
     <FilesToPackage Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Memory\Memory.cpp" />
     <ClCompile Include="src\Communication\Communication.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Memory\Memory.h" />
     <ClInclude Include="src\Communication\Communication.h" />
     <ClInclude Include="dependencies\defines.h" />
-    <ClInclude Include="dependencies\registry.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
