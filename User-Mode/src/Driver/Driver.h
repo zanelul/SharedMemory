@@ -1,21 +1,28 @@
 #pragma once
-#include "Registry.h"
+#include <Windows.h>
+#include <stdint.h>
 
-inline UNICODE_STRING REG_PATH = RTL_CONSTANT_STRING(L"\\Registry\\Machine\\SOFTWARE\\Microsoft\\UX");
+// Make this global so we can pattern scan it
+inline PVOID AllocatedMemory = NULL;
 
 namespace Driver {
 	enum class EOperation : uint8_t {
-		PING = 0,
-		COMPLETED
+		NONE = 0,
+		COMPLETED,
+		RUNNING,
+		PING,
 	};
 
 	struct Request_t {
 		EOperation Operation;
+		uintptr_t Return;
 	};
 
-	inline PVOID m_AllocatedMemory;
-
 	void Init();
-	void SendRequest(Request_t Request);
+	Request_t SendRequest(Request_t Request);
+
+	/* Commands */
+
+	bool IsRunning();
 	void Ping();
 }

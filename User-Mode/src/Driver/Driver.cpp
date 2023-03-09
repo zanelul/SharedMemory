@@ -1,25 +1,34 @@
 #include "Driver.h"
+#include <thread>
 
 void Driver::Init() {
-	m_AllocatedMemory = VirtualAlloc(NULL, sizeof(Request_t), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-	PVOID OurPID = reinterpret_cast<PVOID>(GetCurrentProcessId());
-	Registry::Write(REG_PATH, RTL_CONSTANT_STRING(L"AllocatedMemory"), &m_AllocatedMemory, REG_QWORD, 8);
-	Registry::Write(REG_PATH, RTL_CONSTANT_STRING(L"PID"), &OurPID, REG_QWORD, 8);
+	AllocatedMemory = VirtualAlloc(NULL, sizeof(Request_t), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+	if (!AllocatedMemory) return;
 
-	Request_t Request{};
-	memcpy(m_AllocatedMemory, &Request, sizeof(Request));
+	Request_t InitReq{};
+	InitReq.Operation = EOperation::NONE;
+	memcpy(AllocatedMemory, &InitReq, sizeof(InitReq));
 }
 
-void Driver::SendRequest(Request_t Request) {
-	memcpy(m_AllocatedMemory, &Request, sizeof(Request));
+Driver::Request_t Driver::SendRequest(Request_t Request) {
+	memcpy(AllocatedMemory, &Request, sizeof(Request));
+
+	std::this_thread::sleep_for(std::chrono::milliseconds(2));
 
 	// Very bad implemtation, clean later on
 	while (true) {
-		Request = *(Request_t*)(m_AllocatedMemory);
+		Request_t Respond = *(Request_t*)(AllocatedMemory);
 
-		if (Request.Operation == EOperation::COMPLETED)
-			break;
+		if (Respond.Operation == EOperation::COMPLETED)
+			return Respond;
 	}
+}
+
+bool Driver::IsRunning() {
+	Request_t Request{};
+	Request.Operation = EOperation::RUNNING;
+	Request = SendRequest(Request);
+	return Request.Return == 0x123;
 }
 
 void Driver::Ping() {
