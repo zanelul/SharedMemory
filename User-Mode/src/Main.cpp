@@ -13,7 +13,7 @@ int main() {
 
 	LOG("Driver is " << (IsRunning ? "active" : "not active"));
 
-	while (true) {
+	while (IsRunning) {
 		auto start = high_resolution_clock::now();
 		Driver::Ping();
 		auto stop = high_resolution_clock::now();
