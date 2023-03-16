@@ -2,26 +2,17 @@
 #include <thread>
 
 void Driver::Init() {
-	AllocatedMemory = VirtualAlloc(NULL, sizeof(Request_t), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-	if (!AllocatedMemory) return;
-
-	Request_t InitReq{};
-	InitReq.Operation = EOperation::NONE;
-	memcpy(AllocatedMemory, &InitReq, sizeof(InitReq));
+	/* Going to add some initialization to this later */
 }
 
 Driver::Request_t Driver::SendRequest(Request_t Request) {
-	memcpy(AllocatedMemory, &Request, sizeof(Request));
+	memcpy(&Requests, &Request, sizeof(Request_t));
 
-	std::this_thread::sleep_for(std::chrono::milliseconds(2));
-
-	// Very bad implemtation, clean later on
-	while (true) {
-		Request_t Respond = *(Request_t*)(AllocatedMemory);
-
-		if (Respond.Operation == EOperation::COMPLETED)
-			return Respond;
+	while (Requests.Operation != EOperation::COMPLETED) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(2));
 	}
+
+	return Requests;
 }
 
 bool Driver::IsRunning() {

@@ -2,9 +2,6 @@
 #include <Windows.h>
 #include <stdint.h>
 
-// Make this global so we can pattern scan it
-inline PVOID AllocatedMemory = NULL;
-
 namespace Driver {
 	enum class EOperation : uint8_t {
 		NONE = 0,
@@ -17,6 +14,9 @@ namespace Driver {
 		EOperation Operation;
 		uintptr_t Return;
 	};
+
+	// idk what to name this variable
+	inline Request_t Requests = {};
 
 	void Init();
 	Request_t SendRequest(Request_t Request);
